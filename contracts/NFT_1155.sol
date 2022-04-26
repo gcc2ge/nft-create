@@ -226,10 +226,12 @@ contract NFT1155 is ERC1155, AccessControl {
         _tokenId_type[tokenId] = tokenType;
     }
 
-    function migrate_tokenURI(uint256 tokenId, uint256 tokenType)
-        external
-        onlyRole(OPERATOR_ROLE)
-    {
+    function migrate_tokenURI(
+        uint256 tokenId,
+        uint256 tokenType,
+        string memory _tokenURI
+    ) external onlyRole(OPERATOR_ROLE) {
         _setTokenId_type(tokenId, tokenType);
+        _setTokenURI(tokenId, _tokenURI);
     }
 }

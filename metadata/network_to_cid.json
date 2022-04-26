@@ -1,0 +1,28 @@
+{
+    "bsc-testnet": {
+        "Factory": "0x6798117e19dc0f14D3a83e925a25977dC39dB6e9"
+    },
+    "development": {},
+    "kovan": {},
+    "mainnet": {
+        "current_edition": 0,
+        "group_uris": {}
+    },
+    "mumbai": {
+        "Factory": "0x0090ef1bE3ec984Ee18D94863c0cf5804502b48D",
+        "Factory1155": "0xb6ccCA85af6DeBe0b6F3E3A53795Ee53237eB7fd",
+        "Factory721": "0x8de2084027A6e5fDDd4F72985919a47F0Eb8153B"
+    },
+    "mumbai_moralis": {
+        "current_edition": 0,
+        "group_uris": {}
+    },
+    "polygon-main": {
+        "current_edition": 0,
+        "group_uris": {}
+    },
+    "rinkeby": {
+        "current_edition": 0,
+        "group_uris": {}
+    }
+}

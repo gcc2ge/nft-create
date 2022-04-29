@@ -73,7 +73,7 @@ contract NFT721 is ERC721Enumerable, AccessControl {
         uint256[] calldata token_types
     ) external onlyRole(MINTER_ROLE) returns (uint256) {
         // require(tos.length == tokenURIs.length, "error");
-        for (uint256 i = 1; i <= tokenURIs.length; i++) {
+        for (uint256 i = 0; i < tokenURIs.length; i++) {
             this.mint(to, tokenURIs[i], token_types[i]);
         }
     }
@@ -182,12 +182,30 @@ contract NFT721 is ERC721Enumerable, AccessControl {
         return super.supportsInterface(interfaceId);
     }
 
+    function _migrate_tokenURI(
+        uint256 tokenId,
+        uint256 tokenType,
+        string memory _tokenURI
+    ) internal {
+        _setTokenId_type(tokenId, tokenType);
+        _setTokenURI(tokenId, _tokenURI);
+    }
+
     function migrate_tokenURI(
         uint256 tokenId,
         uint256 tokenType,
         string memory _tokenURI
     ) external onlyRole(OPERATOR_ROLE) {
-        _setTokenId_type(tokenId, tokenType);
-        _setTokenURI(tokenId, _tokenURI);
+        _migrate_tokenURI(tokenId, tokenType, _tokenURI);
+    }
+
+    function migrate_tokenURI_batch(
+        uint256[] memory tokenIds,
+        uint256[] memory tokenTypes,
+        string[] memory _tokenUris
+    ) external onlyRole(OPERATOR_ROLE) {
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            _migrate_tokenURI(tokenIds[i], tokenTypes[i], _tokenUris[i]);
+        }
     }
 }

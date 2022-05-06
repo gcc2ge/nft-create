@@ -9,9 +9,9 @@
         "group_uris": {}
     },
     "mumbai": {
-        "Factory": "0x868ae5D85f1d1E0cEDA8cD7C80Fe839DC7E636da",
-        "Factory1155": "0x796beAc99AFB37a225ABD3981Bb92a9590f063A7",
-        "Factory721": "0x08a5E8b95a3131fB46519A3C15801E8918fdFd95"
+        "Factory": "0x9A066d406aE00173299ADb48d99Af4Ad4550B837",
+        "Factory1155": "0xb9AD93a08F3E61a6930aA39ff7243f8ceE9056b1",
+        "Factory721": "0x823C57557409931227a2145ed3fD4fF0157aE3A2"
     },
     "mumbai_moralis": {
         "current_edition": 0,

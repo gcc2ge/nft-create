@@ -49,6 +49,7 @@ contract Factory721 is IFactory_721, AccessControl {
     }
 
     function _hash(
+        address _addr,
         string memory _name,
         string memory _symbol,
         string memory _ipfs_uri,
@@ -57,7 +58,14 @@ contract Factory721 is IFactory_721, AccessControl {
     ) internal view returns (bytes32) {
         return
             keccak256(
-                abi.encodePacked(_name, _symbol, _ipfs_uri, _me_uri, _salt)
+                abi.encodePacked(
+                    _addr,
+                    _name,
+                    _symbol,
+                    _ipfs_uri,
+                    _me_uri,
+                    _salt
+                )
             );
     }
 
@@ -69,7 +77,14 @@ contract Factory721 is IFactory_721, AccessControl {
         string memory _salt,
         bytes memory _signature
     ) external returns (address) {
-        bytes32 hash = _hash(_name, _symbol, _ipfs_uri, _me_uri, _salt);
+        bytes32 hash = _hash(
+            tx.origin,
+            _name,
+            _symbol,
+            _ipfs_uri,
+            _me_uri,
+            _salt
+        );
         bytes32 message = hash.toEthSignedMessageHash();
         require(message.recover(_signature) == _signer, "error sig");
 

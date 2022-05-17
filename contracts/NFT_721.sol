@@ -58,6 +58,14 @@ contract NFT721 is ERC721Enumerable, AccessControl {
         string memory _tokenURI,
         uint256 token_type
     ) external onlyRole(MINTER_ROLE) returns (uint256) {
+        return _mint_interal(_to, _tokenURI, token_type);
+    }
+
+    function _mint_interal(
+        address _to,
+        string memory _tokenURI,
+        uint256 token_type
+    ) internal returns (uint256) {
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         _mint(_to, newItemId);
@@ -68,13 +76,13 @@ contract NFT721 is ERC721Enumerable, AccessControl {
     }
 
     function mintBatch(
-        address to,
+        address _to,
         string[] memory tokenURIs,
         uint256[] calldata token_types
-    ) external onlyRole(MINTER_ROLE) returns (uint256) {
+    ) external onlyRole(MINTER_ROLE) {
         // require(tos.length == tokenURIs.length, "error");
         for (uint256 i = 0; i < tokenURIs.length; i++) {
-            this.mint(to, tokenURIs[i], token_types[i]);
+            _mint_interal(_to, tokenURIs[i], token_types[i]);
         }
     }
 

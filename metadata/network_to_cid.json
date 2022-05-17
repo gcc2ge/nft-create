@@ -9,9 +9,14 @@
         "group_uris": {}
     },
     "mumbai": {
-        "Factory": "0x9A066d406aE00173299ADb48d99Af4Ad4550B837",
-        "Factory1155": "0xb9AD93a08F3E61a6930aA39ff7243f8ceE9056b1",
-        "Factory721": "0x823C57557409931227a2145ed3fD4fF0157aE3A2"
+        "Factory": "0x7ffdcd17dBE2856673a76cA76fed239E877f719E",
+        "Factory1155": "0x177C236A9E86C307732cb5d9754776768f94dD63",
+        "Factory721": "0x69f1A0f6602d520c944Dbc7F6439c192f9031e0A",
+        "NFT1155Default": "0x621662f82B54A4e2Ecf064bA4728dA9eBa30F2Cf",
+        "NFT1155TransparentUpgradeableProxy": "0xaf566818E5B677D76da51514c3fa8666C475a640",
+        "NFT721Default": "0x0e6862F2B57Db583afDEc8D9621B0116aa3d2A95",
+        "NFT721TransparentUpgradeableProxy": "0x7EE410d147b8aB43703fDeB47Ebb010CF86B9992",
+        "ProxyAdmin": "0x796c49301FE32659AEdE168740474Edf1d457F5F"
     },
     "mumbai_moralis": {
         "current_edition": 0,

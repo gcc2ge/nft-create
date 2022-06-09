@@ -13,9 +13,6 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR");
     bytes32 public constant MINT_ROLE = keccak256("MINT_MANAGER");
 
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    CountersUpgradeable.Counter private _tokenIds;
-
     using ECDSAUpgradeable for bytes32;
     address private _signer;
 
@@ -27,6 +24,8 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
 
     // NFT symbol
     string public symbol;
+
+    uint256 curr_tokenId;
 
     function GrantMintRole(address account) external onlyAdmin {
         grantRole(MINT_ROLE, account);
@@ -93,17 +92,14 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
     }
 
     function uri(uint256 id) public view override returns (string memory) {
-        string memory _tokenURI = _tokenURIs[id];
-
         string memory baseUri = super.uri(0);
-        return
-            string(abi.encodePacked(baseUri, _tokenURI));
+        return string(abi.encodePacked(baseUri, id));
     }
 
     function _hash(
         address _addr,
         address _receiver,
-        string memory _tokenURI,
+        uint256 _id,
         uint256 _quantities,
         string memory _salt
     ) internal view returns (bytes32) {
@@ -112,7 +108,7 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
                 abi.encodePacked(
                     _addr,
                     _receiver,
-                    _tokenURI,
+                    _id,
                     _quantities,
                     _salt
                 )
@@ -121,7 +117,7 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
 
     modifier onlySigner(
         address _receiver,
-        string memory _tokenURI,
+        uint256 _id,
         uint256 _quantities,
         string memory _salt,
         bytes memory _signature
@@ -129,7 +125,7 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
         bytes32 hash = _hash(
             msg.sender,
             _receiver,
-            _tokenURI,
+            _id,
             _quantities,
             _salt
         );
@@ -158,51 +154,35 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
     }
 
     function mint(
-        address receiver,
-        string memory _tokenURI,
-        uint256 quantities,
+        address _receiver,
+        uint256 _id,
+        uint256 _quantities,
         string memory _salt,
         bytes memory _signature
-    ) external onlySigner(receiver, _tokenURI, quantities, _salt, _signature) {
-        uint256 tokenId = _uriTokenId[_tokenURI];
-        uint256 _id;
-        if (tokenId == 0) {
-            _tokenIds.increment();
-            _id = _tokenIds.current();
-            _setTokenURI(_id, _tokenURI);
-        } else {
-            _id = tokenId;
+    ) external onlySigner(_receiver, _id, _quantities, _salt, _signature) {
+        if (_id > curr_tokenId) {
+            curr_tokenId = _id;
         }
 
-        _mint(receiver, _id, quantities, new bytes(0));
+        _mint(_receiver, _id, _quantities, new bytes(0));
     }
 
     function mintBatch(
-        address receiver,
-        string[] memory _tokenURIs_batch,
-        uint256[] calldata quantities,
+        address _receiver,
+        uint256[] calldata _ids,
+        uint256[] calldata _quantities,
         string memory _salt,
         bytes memory _signature
-    ) external onlySignerBatch(receiver, _salt, _signature) {
-        require(
-            _tokenURIs_batch.length == quantities.length,
-            "Mismatched array lengths"
-        );
+    ) external onlySignerBatch(_receiver, _salt, _signature) {
+        require(_ids.length == _quantities.length, "Mismatched array lengths");
 
-        uint256[] memory ids = new uint256[](_tokenURIs_batch.length);
-        for (uint256 i = 0; i < ids.length; i++) {
-            uint256 tokenId = _uriTokenId[_tokenURIs_batch[i]];
-            if (tokenId == 0) {
-                _tokenIds.increment();
-                uint256 newItemId = _tokenIds.current();
-                ids[i] = newItemId;
-                _setTokenURI(newItemId, _tokenURIs_batch[i]);
-            } else {
-                ids[i] = tokenId;
+        for (uint256 i = 0; i < _ids.length; i++) {
+            if (_ids[i] > curr_tokenId) {
+                curr_tokenId = _ids[i];
             }
         }
 
-        _mintBatch(receiver, ids, quantities, new bytes(0));
+        _mintBatch(_receiver, _ids, _quantities, new bytes(0));
     }
 
     function burn(
@@ -239,7 +219,7 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
         uint256 index;
         uint256 tokenCount = 0;
 
-        for (index = 0; index < _tokenIds.current(); index++) {
+        for (index = 0; index < curr_tokenId; index++) {
             uint256 balance = balanceOf(_owner, index + 1);
             if (balance > 0) {
                 tokenCount += 1;
@@ -248,7 +228,7 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
 
         uint256[] memory result = new uint256[](tokenCount);
         uint256 index2;
-        for (index = 0; index < _tokenIds.current(); index++) {
+        for (index = 0; index < curr_tokenId; index++) {
             uint256 balance = balanceOf(_owner, index + 1);
             if (balance > 0) {
                 result[index2] = index + 1;

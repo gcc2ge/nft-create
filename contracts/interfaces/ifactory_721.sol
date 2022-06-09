@@ -12,17 +12,11 @@ interface IFactory_721 {
         bytes memory _signature
     ) external returns (address);
 
-    function mint_721(
-        address nft721,
-        address _to,
-        string memory _tokenURI,
-        uint256 token_type
-    ) external;
+    function mint_721(address _nft721, address _to) external;
 
     function mintBatch_721(
-        address nft721,
-        address to,
-        string[] memory tokenURIs,
-        uint256[] calldata token_types
+        address _nft721,
+        address _to,
+        uint256 _quantity
     ) external;
 }

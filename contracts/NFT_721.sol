@@ -2,24 +2,18 @@ pragma solidity 0.8.9;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "chiru-labs/ERC721A@4.0.0/contracts/ERC721A.sol";
 
-contract NFT721 is ERC721Enumerable, AccessControl {
+contract NFT721 is ERC721A, AccessControl {
     using Strings for uint256;
-
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
 
     // ipfs uri
     string private _ipfs_baseuri;
 
     // me uri
     string private _me_baseuri;
-
-    // Optional mapping for token URIs
-    mapping(uint256 => string) private _tokenURIs;
-    mapping(uint256 => uint256) private _tokenId_type;
+    uint256 snapshot_tokenId;
 
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -29,7 +23,7 @@ contract NFT721 is ERC721Enumerable, AccessControl {
         string memory symbol,
         string memory _ipfs_uri,
         string memory _me_uri
-    ) public ERC721(name, symbol) {
+    ) public ERC721A(name, symbol) {
         _ipfs_baseuri = _ipfs_uri;
         _me_baseuri = _me_uri;
 
@@ -39,13 +33,6 @@ contract NFT721 is ERC721Enumerable, AccessControl {
         _setupRole(MINTER_ROLE, msg.sender);
     }
 
-    function setBaseIpfsURI(string calldata _uri)
-        external
-        onlyRole(OPERATOR_ROLE)
-    {
-        _ipfs_baseuri = _uri;
-    }
-
     function setBaseMeURI(string calldata _uri)
         external
         onlyRole(OPERATOR_ROLE)
@@ -53,56 +40,23 @@ contract NFT721 is ERC721Enumerable, AccessControl {
         _me_baseuri = _uri;
     }
 
-    function mint(
-        address _to,
-        string memory _tokenURI,
-        uint256 token_type
-    ) external onlyRole(MINTER_ROLE) returns (uint256) {
-        return _mint_interal(_to, _tokenURI, token_type);
+    function mint(address _to)
+        external
+        onlyRole(MINTER_ROLE)
+        returns (uint256)
+    {
+        _safeMint(_to, 1);
     }
 
-    function _mint_interal(
-        address _to,
-        string memory _tokenURI,
-        uint256 token_type
-    ) internal returns (uint256) {
-        _tokenIds.increment();
-        uint256 newItemId = _tokenIds.current();
-        _mint(_to, newItemId);
-        _setTokenURI(newItemId, _tokenURI);
-        _setTokenId_type(newItemId, token_type);
-
-        return newItemId;
-    }
-
-    function mintBatch(
-        address _to,
-        string[] memory tokenURIs,
-        uint256[] calldata token_types
-    ) external onlyRole(MINTER_ROLE) {
-        // require(tos.length == tokenURIs.length, "error");
-        for (uint256 i = 0; i < tokenURIs.length; i++) {
-            _mint_interal(_to, tokenURIs[i], token_types[i]);
-        }
+    function mintBatch(address _to, uint256 _quantity)
+        external
+        onlyRole(MINTER_ROLE)
+    {
+        _safeMint(_to, _quantity);
     }
 
     function burn(uint256 tokenId) public {
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "ERC721Burnable: caller is not owner nor approved"
-        );
-        _burn(tokenId);
-    }
-
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI)
-        internal
-        virtual
-    {
-        require(
-            _exists(tokenId),
-            "ERC721Metadata: URI set of nonexistent token"
-        );
-        _tokenURIs[tokenId] = _tokenURI;
+        _burn(tokenId, true);
     }
 
     function tokenURI(uint256 tokenId)
@@ -117,47 +71,40 @@ contract NFT721 is ERC721Enumerable, AccessControl {
             "ERC721Metadata: URI query for nonexistent token"
         );
 
-        string memory _tokenURI = _tokenURIs[tokenId];
         string memory base;
-
-        uint256 token_type = _tokenId_type[tokenId];
-        if (token_type == 1) {
+        if (tokenId < snapshot_tokenId) {
             base = _ipfs_baseuri;
-        } else if (token_type == 2) {
-            base = _me_baseuri;
         } else {
-            revert("unknown  id");
+            base = _me_baseuri;
         }
 
         // If there is no base URI, return the token URI.
         if (bytes(base).length == 0) {
-            return _tokenURI;
+            return "";
         }
-        // If both are set, concatenate the baseURI and tokenURI (via abi.encodePacked).
-        if (bytes(_tokenURI).length > 0) {
-            return string(abi.encodePacked(base, _tokenURI));
-        }
+
         // If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
         return string(abi.encodePacked(base, tokenId.toString()));
     }
 
-    function _setTokenId_type(uint256 tokenId, uint256 tokenType)
-        internal
-        virtual
-    {
-        _tokenId_type[tokenId] = tokenType;
-    }
-
-    function tokensOfOwner(address owner)
+    function tokensOfOwner(address _owner)
         public
         view
-        returns (uint256[] memory tokens)
+        returns (uint256[] memory)
     {
-        uint256 tokenLength = super.balanceOf(owner);
-        tokens = new uint256[](tokenLength);
-        for (uint256 i = 0; i < tokenLength; i++) {
-            tokens[i] = ERC721Enumerable.tokenOfOwnerByIndex(owner, i);
+        uint256 balance = balanceOf(_owner);
+        uint256[] memory tokens = new uint256[](balance);
+        uint256 index;
+        unchecked {
+            uint256 totalSupply = totalSupply();
+            for (uint256 i; i < totalSupply; i++) {
+                if (ownerOf(i) == _owner) {
+                    tokens[index] = uint256(i);
+                    index++;
+                }
+            }
         }
+        return tokens;
     }
 
     function transferOwner(address to) public {
@@ -184,36 +131,14 @@ contract NFT721 is ERC721Enumerable, AccessControl {
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721Enumerable, AccessControl)
+        override(ERC721A, AccessControl)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
     }
 
-    function _migrate_tokenURI(
-        uint256 tokenId,
-        uint256 tokenType,
-        string memory _tokenURI
-    ) internal {
-        _setTokenId_type(tokenId, tokenType);
-        _setTokenURI(tokenId, _tokenURI);
-    }
-
-    function migrate_tokenURI(
-        uint256 tokenId,
-        uint256 tokenType,
-        string memory _tokenURI
-    ) external onlyRole(OPERATOR_ROLE) {
-        _migrate_tokenURI(tokenId, tokenType, _tokenURI);
-    }
-
-    function migrate_tokenURI_batch(
-        uint256[] memory tokenIds,
-        uint256[] memory tokenTypes,
-        string[] memory _tokenUris
-    ) external onlyRole(OPERATOR_ROLE) {
-        for (uint256 i = 0; i < tokenIds.length; i++) {
-            _migrate_tokenURI(tokenIds[i], tokenTypes[i], _tokenUris[i]);
-        }
+    function migrate(string memory _ipfs_uri) public onlyRole(OPERATOR_ROLE) {
+        snapshot_tokenId = _nextTokenId();
+        _ipfs_uri = _ipfs_uri;
     }
 }

@@ -6,9 +6,6 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract NFT1155 is ERC1155, AccessControl {
-    using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
-
     // NFT name
     string public name;
 
@@ -21,10 +18,8 @@ contract NFT1155 is ERC1155, AccessControl {
     // me uri
     string private _me_baseuri;
 
-    // Optional mapping for token URIs
-    mapping(uint256 => string) private _tokenURIs;
-    mapping(string => uint256) private _uriTokenId;
-    mapping(uint256 => uint256) private _tokenId_type;
+    uint256 snapshot_tokenId;
+    uint256 curr_tokenId;
 
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -47,13 +42,6 @@ contract NFT1155 is ERC1155, AccessControl {
         _me_baseuri = _me_uri;
     }
 
-    function setBaseIpfsURI(string calldata _uri)
-        external
-        onlyRole(OPERATOR_ROLE)
-    {
-        _ipfs_baseuri = _uri;
-    }
-
     function setBaseMeURI(string calldata _uri)
         external
         onlyRole(OPERATOR_ROLE)
@@ -61,72 +49,42 @@ contract NFT1155 is ERC1155, AccessControl {
         _me_baseuri = _uri;
     }
 
-    function uri(uint256 id) public view override returns (string memory) {
-        uint256 token_type = _tokenId_type[id];
+    function uri(uint256 _id) public view override returns (string memory) {
         string memory baseUri;
-        string memory _tokenURI = _tokenURIs[id];
-        if (token_type == 1) {
+
+        if (_id <= snapshot_tokenId) {
             baseUri = _ipfs_baseuri;
-        } else if (token_type == 2) {
-            baseUri = _me_baseuri;
         } else {
-            revert("unknown  id");
+            baseUri = _me_baseuri;
         }
 
-        return string(abi.encodePacked(baseUri, _tokenURI));
+        return string(abi.encodePacked(baseUri, _id));
     }
 
     function mint(
-        address receiver,
-        string memory _tokenURI,
-        uint256 quantities,
-        uint256 token_type
+        address _receiver,
+        uint256 _id,
+        uint256 _quantities
     ) external onlyRole(MINTER_ROLE) {
-        uint256 tokenId = _uriTokenId[_tokenURI];
-        uint256 _id;
-        if (tokenId == 0) {
-            _tokenIds.increment();
-            _id = _tokenIds.current();
-            _setTokenURI(_id, _tokenURI);
-            _setTokenId_type(_id, token_type);
-        } else {
-            _id = tokenId;
+        if (_id > curr_tokenId) {
+            curr_tokenId = _id;
         }
-
-        _mint(receiver, _id, quantities, new bytes(0));
+        _mint(_receiver, _id, _quantities, new bytes(0));
     }
 
     function mintBatch(
-        address receiver,
-        string[] memory _tokenURIs_batch,
-        uint256[] calldata quantities,
-        uint256[] calldata token_types
+        address _receiver,
+        uint256[] calldata _ids,
+        uint256[] calldata _quantities
     ) external onlyRole(MINTER_ROLE) {
-        require(
-            _tokenURIs_batch.length == quantities.length,
-            "Mismatched array lengths"
-        );
-
-        require(
-            _tokenURIs_batch.length == token_types.length,
-            "Mismatched array lengths"
-        );
-
-        uint256[] memory ids = new uint256[](_tokenURIs_batch.length);
-        for (uint256 i = 0; i < ids.length; i++) {
-            uint256 tokenId = _uriTokenId[_tokenURIs_batch[i]];
-            if (tokenId == 0) {
-                _tokenIds.increment();
-                uint256 newItemId = _tokenIds.current();
-                ids[i] = newItemId;
-                _setTokenURI(newItemId, _tokenURIs_batch[i]);
-                _setTokenId_type(newItemId, token_types[i]);
-            } else {
-                ids[i] = tokenId;
+        require(_ids.length == _quantities.length, "Mismatched array lengths");
+        for (uint256 i = 0; i < _ids.length; i++) {
+            if (_ids[i] > curr_tokenId) {
+                curr_tokenId = _ids[i];
             }
         }
 
-        _mintBatch(receiver, ids, quantities, new bytes(0));
+        _mintBatch(_receiver, _ids, _quantities, new bytes(0));
     }
 
     function burn(
@@ -163,7 +121,7 @@ contract NFT1155 is ERC1155, AccessControl {
         uint256 index;
         uint256 tokenCount = 0;
 
-        for (index = 0; index < _tokenIds.current(); index++) {
+        for (index = 0; index < curr_tokenId; index++) {
             uint256 balance = balanceOf(_owner, index + 1);
             if (balance > 0) {
                 tokenCount += 1;
@@ -172,7 +130,7 @@ contract NFT1155 is ERC1155, AccessControl {
 
         uint256[] memory result = new uint256[](tokenCount);
         uint256 index2;
-        for (index = 0; index < _tokenIds.current(); index++) {
+        for (index = 0; index < curr_tokenId; index++) {
             uint256 balance = balanceOf(_owner, index + 1);
             if (balance > 0) {
                 result[index2] = index + 1;
@@ -212,44 +170,8 @@ contract NFT1155 is ERC1155, AccessControl {
         return super.supportsInterface(interfaceId);
     }
 
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI)
-        internal
-        virtual
-    {
-        _tokenURIs[tokenId] = _tokenURI;
-    }
-
-    function _setTokenId_type(uint256 tokenId, uint256 tokenType)
-        internal
-        virtual
-    {
-        _tokenId_type[tokenId] = tokenType;
-    }
-
-    function _migrate_tokenURI(
-        uint256 tokenId,
-        uint256 tokenType,
-        string memory _tokenURI
-    ) internal {
-        _setTokenId_type(tokenId, tokenType);
-        _setTokenURI(tokenId, _tokenURI);
-    }
-
-    function migrate_tokenURI(
-        uint256 tokenId,
-        uint256 tokenType,
-        string memory _tokenURI
-    ) external onlyRole(OPERATOR_ROLE) {
-        _migrate_tokenURI(tokenId, tokenType, _tokenURI);
-    }
-
-    function migrate_tokenURI_batch(
-        uint256[] memory tokenIds,
-        uint256[] memory tokenTypes,
-        string[] memory _tokenUris
-    ) external onlyRole(OPERATOR_ROLE) {
-        for (uint256 i = 0; i < tokenIds.length; i++) {
-            _migrate_tokenURI(tokenIds[i], tokenTypes[i], _tokenUris[i]);
-        }
+    function migrate(string memory _ipfs_uri) public onlyRole(OPERATOR_ROLE) {
+        snapshot_tokenId = curr_tokenId;
+        _ipfs_uri = _ipfs_uri;
     }
 }

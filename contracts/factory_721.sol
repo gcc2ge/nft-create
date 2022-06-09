@@ -97,23 +97,18 @@ contract Factory721 is IFactory_721, AccessControl {
         return _tokenAddress;
     }
 
-    function mint_721(
-        address nft721,
-        address _to,
-        string memory _tokenURI,
-        uint256 token_type
-    ) external onlyRole(MINT_ROLE) {
-        NFT721 token = NFT721(nft721);
-        token.mint(_to, _tokenURI, token_type);
+    function mint_721(address _nft721, address _to) external onlyRole(MINT_ROLE)
+    {
+        NFT721 token = NFT721(_nft721);
+        token.mint(_to);
     }
 
     function mintBatch_721(
-        address nft721,
-        address to,
-        string[] memory tokenURIs,
-        uint256[] calldata token_types
+        address _nft721,
+        address _to,
+        uint256 _quantity
     ) external onlyRole(MINT_ROLE) {
-        NFT721 token = NFT721(nft721);
-        token.mintBatch(to, tokenURIs, token_types);
+        NFT721 token = NFT721(_nft721);
+        token.mintBatch(_to, _quantity);
     }
 }

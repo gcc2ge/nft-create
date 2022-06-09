@@ -63,52 +63,44 @@ contract Factory is AccessControl {
     }
 
     function mint_1155(
-        address nft1155,
-        address receiver,
-        string memory _tokenURI,
-        uint256 quantities,
-        uint256 token_type
+        address _nft1155,
+        address _receiver,
+        uint256 _id,
+        uint256 _quantities
     ) external onlyRole(MINT_ROLE) {
         factory_1155.mint_1155(
-            nft1155,
-            receiver,
-            _tokenURI,
-            quantities,
-            token_type
+            _nft1155,
+            _receiver,
+            _id,
+            _quantities
         );
     }
 
     function mintBatch_1155(
-        address nft1155,
-        address receiver,
-        string[] memory _tokenURIs_batch,
-        uint256[] calldata quantities,
-        uint256[] calldata token_types
+        address _nft1155,
+        address _receiver,
+        uint256[] calldata _ids,
+        uint256[] calldata _quantities
     ) external onlyRole(MINT_ROLE) {
         factory_1155.mintBatch_1155(
-            nft1155,
-            receiver,
-            _tokenURIs_batch,
-            quantities,
-            token_types
+            _nft1155,
+            _receiver,
+            _ids,
+            _quantities
         );
     }
 
     function mint_721(
-        address nft721,
-        address _to,
-        string memory _tokenURI,
-        uint256 token_type
+        address _nft721, address _to
     ) external onlyRole(MINT_ROLE) {
-        factory_721.mint_721(nft721, _to, _tokenURI, token_type);
+        factory_721.mint_721(_nft721, _to);
     }
 
     function mintBatch_721(
-        address nft721,
-        address to,
-        string[] memory tokenURIs,
-        uint256[] calldata token_types
+        address _nft721,
+        address _to,
+        uint256 _quantity
     ) external onlyRole(MINT_ROLE) {
-        factory_721.mintBatch_721(nft721, to, tokenURIs, token_types);
+        factory_721.mintBatch_721(_nft721, _to, _quantity);
     }
 }

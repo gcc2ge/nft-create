@@ -12,9 +12,9 @@
         "Factory": "0x7ffdcd17dBE2856673a76cA76fed239E877f719E",
         "Factory1155": "0x177C236A9E86C307732cb5d9754776768f94dD63",
         "Factory721": "0x69f1A0f6602d520c944Dbc7F6439c192f9031e0A",
-        "NFT1155Default": "0x621662f82B54A4e2Ecf064bA4728dA9eBa30F2Cf",
+        "NFT1155Default": "0xC73d4Fc7B935ABCa853322a6A5b1b6DEF4b1BF3f",
         "NFT1155TransparentUpgradeableProxy": "0xaf566818E5B677D76da51514c3fa8666C475a640",
-        "NFT721Default": "0x0e6862F2B57Db583afDEc8D9621B0116aa3d2A95",
+        "NFT721Default": "0x602De07140d0FAFCE5940e0189e1B547d99C14D2",
         "NFT721TransparentUpgradeableProxy": "0x7EE410d147b8aB43703fDeB47Ebb010CF86B9992",
         "ProxyAdmin": "0x796c49301FE32659AEdE168740474Edf1d457F5F"
     },
@@ -25,6 +25,16 @@
     "polygon-main": {
         "current_edition": 0,
         "group_uris": {}
+    },
+    "polygon-mainnet": {
+        "Factory": "0x20728AE4DC5b2FD242449e0daC93193d8572Fc3E",
+        "Factory1155": "0x0ef1d97f2a8c929Da47663212E62670B68e5a281",
+        "Factory721": "0xd55beBC6c3420a5fFc68e23Ba570683BA9d8424c",
+        "NFT1155Default": "0x8D368a96D1677dAF102ffb4bf466976C2081eB51",
+        "NFT1155TransparentUpgradeableProxy": "0xA0a69F07a42b55086Ac134001d9B8fBB1b2d81fc",
+        "NFT721Default": "0x92B9C2c44eE656C4E1Cc076D03Ced02cC21941B6",
+        "NFT721TransparentUpgradeableProxy": "0x8b973A7d585C4a2280D2113d3114b26E9A8dadF5",
+        "ProxyAdmin": "0x348B2F04bEF966B8325Cf6d4BfC46Ae5e9778fCC"
     },
     "rinkeby": {
         "current_edition": 0,

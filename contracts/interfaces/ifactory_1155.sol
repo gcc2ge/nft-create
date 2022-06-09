@@ -13,18 +13,16 @@ interface IFactory_1155 {
     ) external returns (address);
 
     function mint_1155(
-        address nft1155,
-        address receiver,
-        string memory _tokenURI,
-        uint256 quantities,
-        uint256 token_type
+        address _nft1155,
+        address _receiver,
+        uint256 _id,
+        uint256 _quantities
     ) external;
 
     function mintBatch_1155(
-        address nft1155,
-        address receiver,
-        string[] memory _tokenURIs_batch,
-        uint256[] calldata quantities,
-        uint256[] calldata token_types
+        address _nft1155,
+        address _receiver,
+        uint256[] calldata _ids,
+        uint256[] calldata _quantities
     ) external;
 }

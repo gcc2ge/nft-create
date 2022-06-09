@@ -7,7 +7,7 @@ import "@openzeppelin-contracts/contracts/utils/StringsUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/CountersUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/cryptography/ECDSAUpgradeable.sol";
 
-contract NFT1155Default is ERC1155Upgradeable, AccessControlUpgradeable {
+contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
     event SignerUpdated(address newSigner);
 
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR");
@@ -97,7 +97,7 @@ contract NFT1155Default is ERC1155Upgradeable, AccessControlUpgradeable {
 
         string memory baseUri = super.uri(0);
         return
-            string(abi.encodePacked(baseUri, StringsUpgradeable.toString(id)));
+            string(abi.encodePacked(baseUri, _tokenURI));
     }
 
     function _hash(

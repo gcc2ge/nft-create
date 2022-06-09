@@ -2,12 +2,14 @@ pragma solidity 0.8.9;
 
 import "@openzeppelin-contracts/contracts/utils/CountersUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/StringsUpgradeable.sol";
-import "@openzeppelin-contracts/contracts/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/access/AccessControlUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/cryptography/ECDSAUpgradeable.sol";
 
-contract NFT721Default is
-    ERC721EnumerableUpgradeable,
+import "chiru-labs/ERC721A-Upgradeable@4.0.0/contracts/ERC721AUpgradeable.sol";
+
+
+contract MeNFT721Creation is
+    ERC721AUpgradeable,
     AccessControlUpgradeable
 {
     event SignerUpdated(address newSigner);
@@ -33,7 +35,7 @@ contract NFT721Default is
         string memory _baseuri
     ) public initializer {
         __AccessControl_init();
-        __ERC721_init(name, symbol);
+        __ERC721A_init(name, symbol);
 
         __NFT721_init_unchained(_baseuri);
     }
@@ -133,11 +135,7 @@ contract NFT721Default is
     }
 
     function burn(uint256 tokenId) public {
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "ERC721Burnable: caller is not owner nor approved"
-        );
-        _burn(tokenId);
+        _burn(tokenId, true);
     }
 
     function _setTokenURI(uint256 tokenId, string memory _tokenURI)
@@ -177,23 +175,28 @@ contract NFT721Default is
         // If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
         return
             string(
-                abi.encodePacked(base, StringsUpgradeable.toString(tokenId))
+                abi.encodePacked(base, _tokenURI)
             );
     }
 
-    function tokensOfOwner(address owner)
+    function tokensOfOwner(address _owner)
         public
         view
-        returns (uint256[] memory tokens)
+        returns (uint256[] memory)
     {
-        uint256 tokenLength = ERC721Upgradeable.balanceOf(owner);
-        tokens = new uint256[](tokenLength);
-        for (uint256 i = 0; i < tokenLength; i++) {
-            tokens[i] = ERC721EnumerableUpgradeable.tokenOfOwnerByIndex(
-                owner,
-                i
-            );
+        uint256 balance = balanceOf(_owner);
+        uint256[] memory tokens = new uint256[](balance);
+        uint256 index;
+        unchecked {
+            uint256 totalSupply = totalSupply();
+            for (uint256 i; i < totalSupply; i++) {
+                if (ownerOf(i) == _owner) {
+                    tokens[index] = uint256(i);
+                    index++;
+                }
+            }
         }
+        return tokens;
     }
 
     function grantMinterRole(address to) public {
@@ -215,7 +218,7 @@ contract NFT721Default is
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721EnumerableUpgradeable, AccessControlUpgradeable)
+        override(ERC721AUpgradeable, AccessControlUpgradeable)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);

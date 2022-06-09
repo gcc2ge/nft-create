@@ -97,24 +97,22 @@ contract Factory1155 is IFactory_1155, AccessControl {
     }
 
     function mint_1155(
-        address nft1155,
-        address receiver,
-        string memory _tokenURI,
-        uint256 quantities,
-        uint256 token_type
+        address _nft1155,
+        address _receiver,
+        uint256 _id,
+        uint256 _quantities
     ) external onlyRole(MINT_ROLE) {
-        NFT1155 token = NFT1155(nft1155);
-        token.mint(receiver, _tokenURI, quantities, token_type);
+        NFT1155 token = NFT1155(_nft1155);
+        token.mint(_receiver, _id, _quantities);
     }
 
     function mintBatch_1155(
-        address nft1155,
-        address receiver,
-        string[] memory _tokenURIs_batch,
-        uint256[] calldata quantities,
-        uint256[] calldata token_types
+        address _nft1155,
+        address _receiver,
+        uint256[] calldata _ids,
+        uint256[] calldata _quantities
     ) external onlyRole(MINT_ROLE) {
-        NFT1155 token = NFT1155(nft1155);
-        token.mintBatch(receiver, _tokenURIs_batch, quantities, token_types);
+        NFT1155 token = NFT1155(_nft1155);
+        token.mintBatch(_receiver, _ids, _quantities);
     }
 }

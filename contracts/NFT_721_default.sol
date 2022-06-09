@@ -1,6 +1,5 @@
 pragma solidity 0.8.9;
 
-import "@openzeppelin-contracts/contracts/utils/CountersUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/StringsUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/access/AccessControlUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/cryptography/ECDSAUpgradeable.sol";
@@ -10,17 +9,11 @@ import "chiru-labs/ERC721A-Upgradeable@4.0.0/contracts/ERC721AUpgradeable.sol";
 contract MeNFT721Creation is ERC721AUpgradeable, AccessControlUpgradeable {
     event SignerUpdated(address newSigner);
 
-    using CountersUpgradeable for CountersUpgradeable.Counter;
-    CountersUpgradeable.Counter private _tokenIds;
-
     // base uri
     string private baseuri;
 
     using ECDSAUpgradeable for bytes32;
     address private _signer;
-
-    // Optional mapping for token URIs
-    mapping(uint256 => string) private _tokenURIs;
 
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
@@ -100,17 +93,6 @@ contract MeNFT721Creation is ERC721AUpgradeable, AccessControlUpgradeable {
         _burn(tokenId, true);
     }
 
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI)
-        internal
-        virtual
-    {
-        require(
-            _exists(tokenId),
-            "ERC721Metadata: URI set of nonexistent token"
-        );
-        _tokenURIs[tokenId] = _tokenURI;
-    }
-
     function tokenURI(uint256 tokenId)
         public
         view
@@ -123,19 +105,15 @@ contract MeNFT721Creation is ERC721AUpgradeable, AccessControlUpgradeable {
             "ERC721Metadata: URI query for nonexistent token"
         );
 
-        string memory _tokenURI = _tokenURIs[tokenId];
         string memory base = baseuri;
 
         // If there is no base URI, return the token URI.
         if (bytes(base).length == 0) {
-            return _tokenURI;
+            return "";
         }
-        // If both are set, concatenate the baseURI and tokenURI (via abi.encodePacked).
-        if (bytes(_tokenURI).length > 0) {
-            return string(abi.encodePacked(base, _tokenURI));
-        }
+
         // If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
-        return string(abi.encodePacked(base, _tokenURI));
+        return string(abi.encodePacked(base, tokenId));
     }
 
     function tokensOfOwner(address _owner)

@@ -1,7 +1,5 @@
 pragma solidity 0.8.9;
 
-import "@openzeppelin/contracts/utils/Counters.sol";
-
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "chiru-labs/ERC721A@4.0.0/contracts/ERC721A.sol";
 
@@ -40,10 +38,7 @@ contract NFT721 is ERC721A, AccessControl {
         _me_baseuri = _uri;
     }
 
-    function mint(address _to)
-        external
-        onlyRole(MINTER_ROLE)
-    {
+    function mint(address _to) external onlyRole(MINTER_ROLE) {
         _safeMint(_to, 1);
     }
 

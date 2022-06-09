@@ -43,7 +43,6 @@ contract NFT721 is ERC721A, AccessControl {
     function mint(address _to)
         external
         onlyRole(MINTER_ROLE)
-        returns (uint256)
     {
         _safeMint(_to, 1);
     }

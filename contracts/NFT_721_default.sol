@@ -7,11 +7,7 @@ import "@openzeppelin-contracts/contracts/utils/cryptography/ECDSAUpgradeable.so
 
 import "chiru-labs/ERC721A-Upgradeable@4.0.0/contracts/ERC721AUpgradeable.sol";
 
-
-contract MeNFT721Creation is
-    ERC721AUpgradeable,
-    AccessControlUpgradeable
-{
+contract MeNFT721Creation is ERC721AUpgradeable, AccessControlUpgradeable {
     event SignerUpdated(address newSigner);
 
     using CountersUpgradeable for CountersUpgradeable.Counter;
@@ -64,38 +60,19 @@ contract MeNFT721Creation is
     function _hash(
         address _addr,
         address _receiver,
-        string memory _tokenURI,
+        uint256 _quantity,
         string memory _salt
     ) internal view returns (bytes32) {
-        return keccak256(abi.encodePacked(_addr, _receiver, _tokenURI, _salt));
+        return keccak256(abi.encodePacked(_addr, _receiver, _quantity, _salt));
     }
 
     modifier onlySigner(
         address _receiver,
-        string memory _tokenURI,
+        uint256 _quantity,
         string memory _salt,
         bytes memory _signature
     ) {
-        bytes32 hash = _hash(msg.sender, _receiver, _tokenURI, _salt);
-        bytes32 message = hash.toEthSignedMessageHash();
-        require(message.recover(_signature) == _signer, "error sig");
-        _;
-    }
-
-    function _hash_batch(
-        address _addr,
-        address _receiver,
-        string memory _salt
-    ) internal view returns (bytes32) {
-        return keccak256(abi.encodePacked(_addr, _receiver, _salt));
-    }
-
-    modifier onlySignerBatch(
-        address _receiver,
-        string memory _salt,
-        bytes memory _signature
-    ) {
-        bytes32 hash = _hash_batch(msg.sender, _receiver, _salt);
+        bytes32 hash = _hash(msg.sender, _receiver, _quantity, _salt);
         bytes32 message = hash.toEthSignedMessageHash();
         require(message.recover(_signature) == _signer, "error sig");
         _;
@@ -103,35 +80,20 @@ contract MeNFT721Creation is
 
     function mint(
         address _to,
-        string memory _tokenURI,
         string memory _salt,
         bytes memory _signature
-    ) external onlySigner(_to, _tokenURI, _salt, _signature) returns (uint256) {
-        return _mint_interal(_to, _tokenURI);
-    }
-
-    function _mint_interal(address _to, string memory _tokenURI)
-        internal
-        returns (uint256)
-    {
-        _tokenIds.increment();
-        uint256 newItemId = _tokenIds.current();
-        _mint(_to, newItemId);
-        _setTokenURI(newItemId, _tokenURI);
-
-        return newItemId;
+    ) external onlySigner(_to, 1, _salt, _signature) {
+        _safeMint(_to, 1);
     }
 
     function mintBatch(
         address _to,
-        string[] memory tokenURIs,
+        uint256 _quantity,
         string memory _salt,
         bytes memory _signature
-    ) external onlySignerBatch(_to, _salt, _signature) {
+    ) external onlySigner(_to, _quantity, _salt, _signature) {
         // require(tos.length == tokenURIs.length, "error");
-        for (uint256 i = 0; i < tokenURIs.length; i++) {
-            _mint_interal(_to, tokenURIs[i]);
-        }
+        _safeMint(_to, _quantity);
     }
 
     function burn(uint256 tokenId) public {
@@ -173,10 +135,7 @@ contract MeNFT721Creation is
             return string(abi.encodePacked(base, _tokenURI));
         }
         // If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
-        return
-            string(
-                abi.encodePacked(base, _tokenURI)
-            );
+        return string(abi.encodePacked(base, _tokenURI));
     }
 
     function tokensOfOwner(address _owner)

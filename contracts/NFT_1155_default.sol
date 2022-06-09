@@ -3,7 +3,6 @@ pragma solidity 0.8.9;
 import "@openzeppelin-contracts/contracts/access/AccessControlUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/token/ERC1155/ERC1155Upgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/StringsUpgradeable.sol";
-import "@openzeppelin-contracts/contracts/utils/CountersUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/cryptography/ECDSAUpgradeable.sol";
 
 contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {

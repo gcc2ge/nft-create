@@ -3,9 +3,10 @@ pragma solidity 0.8.9;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract NFT1155 is ERC1155, AccessControl {
+    using Strings for uint256;
+
     // NFT name
     string public name;
 
@@ -58,7 +59,7 @@ contract NFT1155 is ERC1155, AccessControl {
             baseUri = _me_baseuri;
         }
 
-        return string(abi.encodePacked(baseUri, _id));
+        return string(abi.encodePacked(baseUri, _id.toString()));
     }
 
     function mint(

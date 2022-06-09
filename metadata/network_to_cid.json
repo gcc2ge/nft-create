@@ -9,13 +9,13 @@
         "group_uris": {}
     },
     "mumbai": {
-        "Factory": "0x7ffdcd17dBE2856673a76cA76fed239E877f719E",
-        "Factory1155": "0x177C236A9E86C307732cb5d9754776768f94dD63",
-        "Factory721": "0x69f1A0f6602d520c944Dbc7F6439c192f9031e0A",
-        "NFT1155Default": "0xC73d4Fc7B935ABCa853322a6A5b1b6DEF4b1BF3f",
-        "NFT1155TransparentUpgradeableProxy": "0xaf566818E5B677D76da51514c3fa8666C475a640",
-        "NFT721Default": "0x602De07140d0FAFCE5940e0189e1B547d99C14D2",
-        "NFT721TransparentUpgradeableProxy": "0x7EE410d147b8aB43703fDeB47Ebb010CF86B9992",
+        "Factory": "0xcCaBA7C7e2eE8DFd547143C0D95E370E5682bCe5",
+        "Factory1155": "0x1D89FBD9D658303e639784ef7cE67e670029d087",
+        "Factory721": "0x0484804dC40eb1e6582fbf7055bbCe99F5623370",
+        "NFT1155Default": "0x9de5f03EB76688b32168B3fD0a951808C54015BE",
+        "NFT1155TransparentUpgradeableProxy": "0xEff9181068432d9106B094B74731D1406Dfb2BB4",
+        "NFT721Default": "0x0A13CF28426D1b558Cb22e11F433bab0d4E8cB69",
+        "NFT721TransparentUpgradeableProxy": "0xd1473f32493546d10af9a8928a0A64C0A9Ee266a",
         "ProxyAdmin": "0x796c49301FE32659AEdE168740474Edf1d457F5F"
     },
     "mumbai_moralis": {

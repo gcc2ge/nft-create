@@ -1,7 +1,6 @@
 pragma solidity 0.8.9;
 
 import "@openzeppelin-contracts/contracts/access/AccessControlUpgradeable.sol";
-import "@openzeppelin-contracts/contracts/utils/math/SafeMathUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/token/ERC1155/ERC1155Upgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/StringsUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/CountersUpgradeable.sol";
@@ -93,7 +92,7 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
 
     function uri(uint256 id) public view override returns (string memory) {
         string memory baseUri = super.uri(0);
-        return string(abi.encodePacked(baseUri, id));
+        return string(abi.encodePacked(baseUri, StringsUpgradeable.toString(id)));
     }
 
     function _hash(

@@ -22,7 +22,7 @@ contract MeNFT721Creation is ERC721AUpgradeable, AccessControlUpgradeable {
         string memory name,
         string memory symbol,
         string memory _baseuri
-    ) public initializer {
+    ) public initializerERC721A initializer {
         __AccessControl_init();
         __ERC721A_init(name, symbol);
 
@@ -113,7 +113,7 @@ contract MeNFT721Creation is ERC721AUpgradeable, AccessControlUpgradeable {
         }
 
         // If there is a baseURI but no tokenURI, concatenate the tokenID to the baseURI.
-        return string(abi.encodePacked(base, tokenId));
+        return string(abi.encodePacked(base, StringsUpgradeable.toString(tokenId)));
     }
 
     function tokensOfOwner(address _owner)

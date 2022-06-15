@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract NFT1155 is ERC1155, AccessControl {
     event Migrate(uint256 snapshot_tokenId, string uri);
+    event BaseURIUpdated(string uri);
 
     using Strings for uint256;
 
@@ -50,6 +51,8 @@ contract NFT1155 is ERC1155, AccessControl {
         onlyRole(OPERATOR_ROLE)
     {
         _me_baseuri = _uri;
+
+        emit BaseURIUpdated(_uri);
     }
 
     function uri(uint256 _id) public view override returns (string memory) {

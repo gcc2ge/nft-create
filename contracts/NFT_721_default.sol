@@ -8,6 +8,7 @@ import "chiru-labs/ERC721A-Upgradeable@4.0.0/contracts/ERC721AUpgradeable.sol";
 
 contract MeNFT721Creation is ERC721AUpgradeable, AccessControlUpgradeable {
     event SignerUpdated(address newSigner);
+    event BaseURIUpdated(string uri);
 
     // base uri
     string private baseuri;
@@ -48,6 +49,8 @@ contract MeNFT721Creation is ERC721AUpgradeable, AccessControlUpgradeable {
 
     function setBaseURI(string calldata _uri) external onlyRole(OPERATOR_ROLE) {
         baseuri = _uri;
+
+        emit BaseURIUpdated(_uri);
     }
 
     function _hash(

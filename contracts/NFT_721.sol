@@ -6,6 +6,7 @@ import "chiru-labs/ERC721A@4.0.0/contracts/ERC721A.sol";
 
 contract NFT721 is ERC721A, AccessControl {
     event Migrate(uint256 snapshot_tokenId, string uri);
+    event BaseURIUpdated(string uri);
 
     using Strings for uint256;
 
@@ -39,6 +40,7 @@ contract NFT721 is ERC721A, AccessControl {
         onlyRole(OPERATOR_ROLE)
     {
         _me_baseuri = _uri;
+        emit BaseURIUpdated(_uri);
     }
 
     function mint(address _to) external onlyRole(MINTER_ROLE) {

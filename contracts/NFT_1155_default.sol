@@ -7,6 +7,7 @@ import "@openzeppelin-contracts/contracts/utils/cryptography/ECDSAUpgradeable.so
 
 contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
     event SignerUpdated(address newSigner);
+    event BaseURIUpdated(string uri);
 
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR");
     bytes32 public constant MINT_ROLE = keccak256("MINT_MANAGER");
@@ -87,11 +88,13 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
 
     function setBaseURI(string calldata _uri) external onlyOperatorRole {
         _setURI(_uri);
+        emit BaseURIUpdated(_uri);
     }
 
     function uri(uint256 id) public view override returns (string memory) {
         string memory baseUri = super.uri(0);
-        return string(abi.encodePacked(baseUri, StringsUpgradeable.toString(id)));
+        return
+            string(abi.encodePacked(baseUri, StringsUpgradeable.toString(id)));
     }
 
     function _hash(
@@ -103,13 +106,7 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
     ) internal view returns (bytes32) {
         return
             keccak256(
-                abi.encodePacked(
-                    _addr,
-                    _receiver,
-                    _id,
-                    _quantities,
-                    _salt
-                )
+                abi.encodePacked(_addr, _receiver, _id, _quantities, _salt)
             );
     }
 
@@ -120,13 +117,7 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
         string memory _salt,
         bytes memory _signature
     ) {
-        bytes32 hash = _hash(
-            msg.sender,
-            _receiver,
-            _id,
-            _quantities,
-            _salt
-        );
+        bytes32 hash = _hash(msg.sender, _receiver, _id, _quantities, _salt);
         bytes32 message = hash.toEthSignedMessageHash();
         require(message.recover(_signature) == _signer, "error sig");
         _;

@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract NFT1155 is ERC1155, AccessControl {
+    event Migrate(uint256 snapshot_tokenId, string uri);
+
     using Strings for uint256;
 
     // NFT name
@@ -174,5 +176,7 @@ contract NFT1155 is ERC1155, AccessControl {
     function migrate(string memory _ipfs_uri) public onlyRole(OPERATOR_ROLE) {
         snapshot_tokenId = curr_tokenId;
         _ipfs_uri = _ipfs_uri;
+
+        emit Migrate(snapshot_tokenId, _ipfs_uri);
     }
 }

@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "chiru-labs/ERC721A@4.0.0/contracts/ERC721A.sol";
 
 contract NFT721 is ERC721A, AccessControl {
+    event Migrate(uint256 snapshot_tokenId, string uri);
+
     using Strings for uint256;
 
     // ipfs uri
@@ -135,5 +137,7 @@ contract NFT721 is ERC721A, AccessControl {
     function migrate(string memory _ipfs_uri) public onlyRole(OPERATOR_ROLE) {
         snapshot_tokenId = _nextTokenId();
         _ipfs_uri = _ipfs_uri;
+
+        emit Migrate(snapshot_tokenId, _ipfs_uri);
     }
 }

@@ -15,14 +15,12 @@ interface IFactory_1155 {
     function mint_1155(
         address _nft1155,
         address _receiver,
-        uint256 _id,
         uint256 _quantities
     ) external;
 
     function mintBatch_1155(
         address _nft1155,
         address _receiver,
-        uint256[] calldata _ids,
         uint256[] calldata _quantities
     ) external;
 }

@@ -9,10 +9,10 @@
         "group_uris": {}
     },
     "mumbai": {
-        "Factory": "0xe66aB686B29597cBbB2d38D24010046BDB1c3190",
-        "Factory1155": "0x11766547B3C2E5748b32ca3Fd052E8a10d7eDcc8",
+        "Factory": "0x276b202dD4b3b69EF479290F78D54A8f585996DB",
+        "Factory1155": "0xBAAF650cC9A21b36B4a84aF12BDAdb91d9D19dc4",
         "Factory721": "0x7E840c9546FAca8bfF3F09570EadC12169964971",
-        "NFT1155Default": "0x5F08b3fbEd6c3B0eB5303A41De495B457afd1e2a",
+        "NFT1155Default": "0x1AC5748144864B58B940B0e736Bd41dC92ab99De",
         "NFT1155TransparentUpgradeableProxy": "0xe9c043FE7298d1c69B515B2Ac89BB8bD430Dc83F",
         "NFT721Default": "0x16900cba2A430CE035B03Efe6a761ea7Ee455eEd",
         "NFT721TransparentUpgradeableProxy": "0x89fA2E562C86ce021c198ac83bDBcf88A3515B9c",

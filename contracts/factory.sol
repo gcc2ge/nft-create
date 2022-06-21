@@ -8,6 +8,7 @@ contract Factory is AccessControl {
     IFactory_721 factory_721;
     IFactory_1155 factory_1155;
 
+    bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
     bytes32 public constant MINT_ROLE = keccak256("MINT_ROLE");
 
     constructor(address _factory_721, address _factory_1155) public {
@@ -15,6 +16,7 @@ contract Factory is AccessControl {
         factory_1155 = IFactory_1155(_factory_1155);
 
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setupRole(OPERATOR_ROLE, msg.sender);
         _setupRole(MINT_ROLE, msg.sender);
     }
 
@@ -24,6 +26,28 @@ contract Factory is AccessControl {
 
     function reovkeMinterRole(address to) public {
         revokeRole(MINT_ROLE, to);
+    }
+
+    function grantOperatorRole(address to) public {
+        grantRole(OPERATOR_ROLE, to);
+    }
+
+    function reovkeOperatorRole(address to) public {
+        revokeRole(OPERATOR_ROLE, to);
+    }
+
+    function setFactory721(address _factory_721)
+        public
+        onlyRole(OPERATOR_ROLE)
+    {
+        factory_721 = IFactory_721(_factory_721);
+    }
+
+    function setFactory1155(address _factory_1155)
+        public
+        onlyRole(OPERATOR_ROLE)
+    {
+        factory_1155 = IFactory_1155(_factory_1155);
     }
 
     function createToken_721(
@@ -65,34 +89,23 @@ contract Factory is AccessControl {
     function mint_1155(
         address _nft1155,
         address _receiver,
-        uint256 _id,
         uint256 _quantities
     ) external onlyRole(MINT_ROLE) {
-        factory_1155.mint_1155(
-            _nft1155,
-            _receiver,
-            _id,
-            _quantities
-        );
+        factory_1155.mint_1155(_nft1155, _receiver, _quantities);
     }
 
     function mintBatch_1155(
         address _nft1155,
         address _receiver,
-        uint256[] calldata _ids,
         uint256[] calldata _quantities
     ) external onlyRole(MINT_ROLE) {
-        factory_1155.mintBatch_1155(
-            _nft1155,
-            _receiver,
-            _ids,
-            _quantities
-        );
+        factory_1155.mintBatch_1155(_nft1155, _receiver, _quantities);
     }
 
-    function mint_721(
-        address _nft721, address _to
-    ) external onlyRole(MINT_ROLE) {
+    function mint_721(address _nft721, address _to)
+        external
+        onlyRole(MINT_ROLE)
+    {
         factory_721.mint_721(_nft721, _to);
     }
 

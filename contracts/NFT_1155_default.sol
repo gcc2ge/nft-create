@@ -153,6 +153,16 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
         _mint(_receiver, _id, _quantities, new bytes(0));
     }
 
+    function mint_increase(
+        address _receiver,
+        uint256 _quantities,
+        string memory _salt,
+        bytes memory _signature
+    ) external onlySignerBatch(_receiver, _salt, _signature) {
+        curr_tokenId = curr_tokenId + 1;
+        _mint(_receiver, curr_tokenId, _quantities, new bytes(0));
+    }
+
     function mintBatch(
         address _receiver,
         uint256[] calldata _ids,
@@ -166,6 +176,22 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
             if (_ids[i] > curr_tokenId) {
                 curr_tokenId = _ids[i];
             }
+        }
+
+        _mintBatch(_receiver, _ids, _quantities, new bytes(0));
+    }
+
+    function mintBatch_increase(
+        address _receiver,
+        uint256[] calldata _quantities,
+        string memory _salt,
+        bytes memory _signature
+    ) external onlySignerBatch(_receiver, _salt, _signature) {
+        uint256[] memory _ids = new uint256[](_quantities.length);
+
+        for (uint256 i = 0; i < _ids.length; i++) {
+            curr_tokenId = curr_tokenId + 1;
+            _ids[i] = curr_tokenId;
         }
 
         _mintBatch(_receiver, _ids, _quantities, new bytes(0));

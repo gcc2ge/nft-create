@@ -15,9 +15,6 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
     using ECDSAUpgradeable for bytes32;
     address private _signer;
 
-    mapping(string => uint256) private _uriTokenId;
-    mapping(uint256 => string) private _tokenURIs;
-
     // NFT name
     string public name;
 
@@ -225,13 +222,6 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
             }
         }
         return result;
-    }
-
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI)
-        internal
-        virtual
-    {
-        _tokenURIs[tokenId] = _tokenURI;
     }
 
     function supportsInterface(bytes4 interfaceId)

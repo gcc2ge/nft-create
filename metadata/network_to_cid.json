@@ -10,7 +10,7 @@
     },
     "mumbai": {
         "Factory": "0x276b202dD4b3b69EF479290F78D54A8f585996DB",
-        "Factory1155": "0xBAAF650cC9A21b36B4a84aF12BDAdb91d9D19dc4",
+        "Factory1155": "0xFaEcBd09573A7b77b9c5cE6D95e0cA0650Aa723F",
         "Factory721": "0x7E840c9546FAca8bfF3F09570EadC12169964971",
         "NFT1155Default": "0x1AC5748144864B58B940B0e736Bd41dC92ab99De",
         "NFT1155TransparentUpgradeableProxy": "0xe9c043FE7298d1c69B515B2Ac89BB8bD430Dc83F",

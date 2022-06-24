@@ -23,7 +23,7 @@ contract NFT1155 is ERC1155, AccessControl {
     string private _me_baseuri;
 
     uint256 snapshot_tokenId;
-    uint256 curr_tokenId;
+    uint256 curr_tokenId=0;
 
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");

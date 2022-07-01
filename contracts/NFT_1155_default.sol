@@ -21,7 +21,7 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
     // NFT symbol
     string public symbol;
 
-    uint256 curr_tokenId;
+    uint256 curr_tokenId = 0;
 
     function GrantMintRole(address account) external onlyAdmin {
         grantRole(MINT_ROLE, account);
@@ -239,7 +239,7 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
         }
 
         uint256[] memory result = new uint256[](tokenCount);
-        uint256 index2;
+        uint256 index2 = 0;
         for (index = 0; index < curr_tokenId; index++) {
             uint256 balance = balanceOf(_owner, index + 1);
             if (balance > 0) {
@@ -248,6 +248,10 @@ contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
             }
         }
         return result;
+    }
+
+    function reset_curr_tokenId(uint256 _id) external onlyRole(OPERATOR_ROLE) {
+        curr_tokenId = _id;
     }
 
     function supportsInterface(bytes4 interfaceId)

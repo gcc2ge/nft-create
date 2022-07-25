@@ -9,9 +9,10 @@
         "group_uris": {}
     },
     "mumbai": {
-        "Factory": "0x276b202dD4b3b69EF479290F78D54A8f585996DB",
+        "Factory": "0xBDbca9b0bB459b17Cbc11467Fc269b760CB4426c",
         "Factory1155": "0xFaEcBd09573A7b77b9c5cE6D95e0cA0650Aa723F",
         "Factory721": "0x7E840c9546FAca8bfF3F09570EadC12169964971",
+        "FactoryTransparentUpgradeableProxy": "0xD66b52Fa9141eF2EDa468421020B1Dd70fB0D76E",
         "NFT1155Default": "0x3258D68479cA764eCC673B9011536fA5F7161A1B",
         "NFT1155TransparentUpgradeableProxy": "0xe9c043FE7298d1c69B515B2Ac89BB8bD430Dc83F",
         "NFT721Default": "0x16900cba2A430CE035B03Efe6a761ea7Ee455eEd",
@@ -27,11 +28,12 @@
         "group_uris": {}
     },
     "polygon-mainnet": {
-        "Factory": "0x20728AE4DC5b2FD242449e0daC93193d8572Fc3E",
-        "Factory1155": "0x0ef1d97f2a8c929Da47663212E62670B68e5a281",
-        "Factory721": "0xd55beBC6c3420a5fFc68e23Ba570683BA9d8424c",
-        "NFT1155Default": "0x8D368a96D1677dAF102ffb4bf466976C2081eB51",
-        "NFT1155TransparentUpgradeableProxy": "0xA0a69F07a42b55086Ac134001d9B8fBB1b2d81fc",
+        "Factory": "0x0518b89503995F88D9FaA9b691B6c9Ce4F3f37D0",
+        "Factory1155": "0xdacC5141d37Afd587275725143d324511cc23753",
+        "Factory721": "0x2E1c47B57150B828a1F84904A518DCD2d863cc0B",
+        "FactoryTransparentUpgradeableProxy": "0x12ca2C9E85CC4Bdb349D1Ea0393F5b4878b756BD",
+        "NFT1155Default": "0x31c6293bfD6b1fDF03f844a5dC6d4dffa78b2b8B",
+        "NFT1155TransparentUpgradeableProxy": "0x8Be9Cc559253812C363eF9B9c236ea7b6a1bE98b",
         "NFT721Default": "0x92B9C2c44eE656C4E1Cc076D03Ced02cC21941B6",
         "NFT721TransparentUpgradeableProxy": "0x8b973A7d585C4a2280D2113d3114b26E9A8dadF5",
         "ProxyAdmin": "0x348B2F04bEF966B8325Cf6d4BfC46Ae5e9778fCC"

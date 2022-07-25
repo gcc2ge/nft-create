@@ -2,16 +2,29 @@ pragma solidity 0.8.9;
 
 import "interfaces/ifactory_721.sol";
 import "interfaces/ifactory_1155.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin-contracts/contracts/proxy/utils/Initializable.sol";
+import "@openzeppelin-contracts/contracts/access/AccessControlUpgradeable.sol";
 
-contract Factory is AccessControl {
+contract Factory is Initializable, AccessControlUpgradeable {
     IFactory_721 factory_721;
     IFactory_1155 factory_1155;
 
     bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
     bytes32 public constant MINT_ROLE = keccak256("MINT_ROLE");
 
-    constructor(address _factory_721, address _factory_1155) public {
+    function __Factory_init(address _factory_721, address _factory_1155)
+        public
+        initializer
+    {
+        __AccessControl_init();
+
+        __Factory_init_unchained(_factory_721, _factory_1155);
+    }
+
+    function __Factory_init_unchained(
+        address _factory_721,
+        address _factory_1155
+    ) public initializer {
         factory_721 = IFactory_721(_factory_721);
         factory_1155 = IFactory_1155(_factory_1155);
 

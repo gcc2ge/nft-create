@@ -6,7 +6,7 @@ import "@openzeppelin-contracts/contracts/utils/cryptography/ECDSAUpgradeable.so
 
 import "chiru-labs/ERC721A-Upgradeable@4.0.0/contracts/ERC721AUpgradeable.sol";
 
-contract MeNFT721Creation is ERC721AUpgradeable, AccessControlUpgradeable {
+contract NFT721Creation is ERC721AUpgradeable, AccessControlUpgradeable {
     event SignerUpdated(address newSigner);
     event BaseURIUpdated(string uri);
 

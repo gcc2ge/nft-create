@@ -5,7 +5,7 @@ import "@openzeppelin-contracts/contracts/token/ERC1155/ERC1155Upgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/StringsUpgradeable.sol";
 import "@openzeppelin-contracts/contracts/utils/cryptography/ECDSAUpgradeable.sol";
 
-contract MeNFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
+contract NFT1155Creation is ERC1155Upgradeable, AccessControlUpgradeable {
     event SignerUpdated(address newSigner);
     event BaseURIUpdated(string uri);
 

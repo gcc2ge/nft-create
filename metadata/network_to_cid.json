@@ -32,11 +32,11 @@
         "Factory1155": "0xdacC5141d37Afd587275725143d324511cc23753",
         "Factory721": "0x2E1c47B57150B828a1F84904A518DCD2d863cc0B",
         "FactoryTransparentUpgradeableProxy": "0x12ca2C9E85CC4Bdb349D1Ea0393F5b4878b756BD",
-        "NFT1155Default": "0x31c6293bfD6b1fDF03f844a5dC6d4dffa78b2b8B",
-        "NFT1155TransparentUpgradeableProxy": "0x8Be9Cc559253812C363eF9B9c236ea7b6a1bE98b",
+        "NFT1155Default": "0x625c81f7c5802B4cB3A3b9823cA4D67BF1B82eF3",
+        "NFT1155TransparentUpgradeableProxy": "0x7F02884a2C5bca0D681522e59EF48907B666D121",
         "NFT721Default": "0x92B9C2c44eE656C4E1Cc076D03Ced02cC21941B6",
         "NFT721TransparentUpgradeableProxy": "0x8b973A7d585C4a2280D2113d3114b26E9A8dadF5",
-        "ProxyAdmin": "0x348B2F04bEF966B8325Cf6d4BfC46Ae5e9778fCC"
+        "ProxyAdmin": "0x7275ab95E18B8A1DB90956cC7940D4c31901E041"
     },
     "rinkeby": {
         "current_edition": 0,
